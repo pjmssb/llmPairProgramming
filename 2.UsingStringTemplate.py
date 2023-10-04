@@ -15,17 +15,10 @@ palm.configure(
     api_key = os.environ['PALM_API_KEY']
 )
 
-for m in palm.list_models( ):
-    print(f"name: {m.name}")
-    print(f"description: {m.description}")
-    print(f"generation_methods: {m.supported_generation_methods}")
-    print("---------------------------------------------------------------------------\n\n")
-
 models = [m for m in palm.list_models( ) if "generateText" in m.supported_generation_methods]
 
 model_bison = models[0]
 print (model_bison)
-
 
 from google.api_core import retry
 import json
@@ -36,7 +29,36 @@ def generate_text(prompt, model=model_bison, temperature=0.2):
     """
     return palm.generate_text(prompt=prompt, model=model, temperature=temperature)
 
-prompt = "Write code Python for a Windows PC to encrypt a string with a quantum resistant algorithm ."
+
+prompt_template = """
+{priming}
+
+{question}
+
+{decorator}
+
+Your solution:
+"""
+
+priming_text = "You are an expert at writing clear, concise, Python code."
+#question = "create a doubly linked list"
+question = """create a very large list of random numbers in python, 
+and then write code to sort that list"""
+
+
+# option 1
+# decorator = "Work through it step by step, and show your work. One step per line."
+
+# option 2
+decorator = "Insert comments for each line of code."
+
+
+
+prompt = prompt_template.format(priming=priming_text,
+                                question=question,
+                                decorator=decorator)
+
+print(prompt)
 
 completion = generate_text(prompt)
 print(completion.result)
