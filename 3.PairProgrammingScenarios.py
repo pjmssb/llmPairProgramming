@@ -20,12 +20,59 @@ models = [m for m in palm.list_models( ) if "generateText" in m.supported_genera
 model_bison = models[0]
 print (model_bison)
 
-
 from google.api_core import retry
-import json
-@retry.Retry()  
-def generate_text(prompt, model=model_bison, temperature=0.0):
-    """
-    Generate text using a model.
-    """
-    return palm.generate_text(prompt=prompt, model=model, temperature=temperature)
+@retry.Retry()
+def generate_text(prompt, 
+                  model=model_bison, 
+                  temperature=0.0):
+    return palm.generate_text(prompt=prompt,
+                              model=model,
+                              temperature=temperature)
+
+
+#prompt_template = """
+#I don't think this is the best way to do it in Python, can you help me?
+#{question}
+#Please explain in detail, what you did to improve it
+#"""
+
+#prompt_template = """
+#I don't think this code is the best way to do it in Python, can you help me?
+
+#{question}
+
+#Please explore multiple ways of solving the problem, and explain each.
+#"""
+
+
+
+#prompt_template = """
+#I don't think this code is the best way to do it in Python, can you help me?
+
+#{question}
+
+#Please explore multiple ways of solving the problem, 
+#and tell me which is the most Pythonic
+#"""
+
+# option 1
+prompt_template = """
+Can you please simplify this code for a linked list in Python?
+
+{question}
+
+Explain in detail what you did to modify it, and why.
+"""
+
+question = """
+def func_x(array)
+  for i in range(len(array)):
+    print(array[i])
+"""
+
+
+
+completion = generate_text(
+    prompt = prompt_template.format(question=question)
+)
+print(completion.result)
