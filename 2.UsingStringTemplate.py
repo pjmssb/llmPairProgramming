@@ -43,7 +43,7 @@ Your solution:
 priming_text = "You are an expert at writing clear, concise, Python code."
 #question = "create a doubly linked list"
 question = """create a very large list of random numbers in python, 
-and then write code to sort that list"""
+and then write code to sort that list"""    
 
 
 # option 1
